@@ -8,7 +8,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 
-from cellveyor import data, filesystem, report, transfer
+from cellveyor import data, filesystem, report, transfer, output, server
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)
@@ -150,3 +150,19 @@ def transport(  # noqa: PLR0913
         transfer.transfer_reports_to_github(
             github_token, github_organization, github_repository_prefix, per_key_report
         )
+
+
+@cli.command()
+def log() -> None:
+    """🦚 Start the logging server."""
+    # display the header
+    output.print_header()
+    # display details about the server
+    output.print_server()
+    # run the server; note that this
+    # syslog server receives debugging
+    # information from cellveyor.
+    # It must be started in a separate process
+    # before running any sub-command
+    # of the cellveyor tool
+    server.start_syslog_server()
