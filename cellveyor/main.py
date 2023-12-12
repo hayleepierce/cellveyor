@@ -8,7 +8,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 
-from cellveyor import data, filesystem, report, transfer, output, server
+from cellveyor import data, debug, filesystem, report, transfer, output, server
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)
@@ -27,6 +27,33 @@ def display_reports(reports_dict: Dict[str, str]) -> None:
         # a markdown-based formatter for the report's contents
         console.print(Panel(Markdown(current_report), title="Report", expand=False))
         console.print()
+
+
+def output_preamble(
+    verbose: bool,
+    debug_level: debug.DebugLevel = debug.DebugLevel.ERROR,
+    debug_destination: debug.DebugDestination = debug.DebugDestination.CONSOLE,
+    **kwargs,
+) -> None:
+    """Output all of the preamble content."""
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
+    # display the header
+    output.print_header()
+    # display details about configuration as
+    # long as verbose output was requested;
+    # note that passing **kwargs to this function
+    # will pass along all of the extra keyword
+    # arguments that were input to the function
+    output.print_diagnostics(
+        verbose,
+        debug_level=debug_level.value,
+        debug_destination=debug_destination.value,
+        **kwargs,
+    )
 
 
 @cli.command()
@@ -101,8 +128,24 @@ def transport(  # noqa: PLR0913
         False,
         help="Transfer a report to GitHub",
     ),
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
+    ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
     """Transport a specified spreadsheet."""
+    if verbose:
+        # output the preamble
+        output_preamble(verbose, debug_level, debug_destination)
     # determine if the provided directory and file are valid
     if not filesystem.confirm_valid_file_in_directory(
         spreadsheet_file, spreadsheet_directory

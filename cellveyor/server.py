@@ -1,3 +1,5 @@
+"""Create and run a syslog remote server for debugging purposes."""
+
 import logging
 import logging.handlers
 import socketserver

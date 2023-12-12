@@ -81,10 +81,13 @@ class Markers:
     Bad_Fifteen: str
     Bad_Zero_Zero: str
     Empty_String: str
+    Indent: str
     Space: str
 
 
-markers = Markers(Bad_Fifteen="<15>", Bad_Zero_Zero="", Empty_String="", Space=" ")
+markers = Markers(
+    Bad_Fifteen="<15>", Bad_Zero_Zero="", Empty_String="", Indent="   ", Space=" "
+)
 
 
 # output constant
