@@ -73,6 +73,18 @@ logging = Logging(
 )
 
 
+# humanreadable constant
+@dataclass(frozen=True)
+class Humanreadable:
+    """Define the Humanreadable dataclass for constant(s)."""
+
+    Yes: str
+    No: str
+
+
+humanreadable = Humanreadable(Yes="Yes", No="No")
+
+
 # markers constant
 @dataclass(frozen=True)
 class Markers:
@@ -83,10 +95,16 @@ class Markers:
     Empty_String: str
     Indent: str
     Space: str
+    Newline: str
 
 
 markers = Markers(
-    Bad_Fifteen="<15>", Bad_Zero_Zero="", Empty_String="", Indent="   ", Space=" "
+    Bad_Fifteen="<15>",
+    Bad_Zero_Zero="",
+    Empty_String="",
+    Indent="   ",
+    Space=" ",
+    Newline="\n",
 )
 
 

@@ -8,7 +8,16 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 
-from cellveyor import data, debug, filesystem, report, transfer, output, server
+from cellveyor import (
+    constants,
+    data,
+    debug,
+    filesystem,
+    report,
+    transfer,
+    output,
+    server,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)
@@ -25,7 +34,9 @@ def display_reports(reports_dict: Dict[str, str]) -> None:
         current_report = reports_dict[current_report_key]
         # display the report inside of a rich panel, using
         # a markdown-based formatter for the report's contents
-        console.print(Panel(Markdown(current_report), title="Report", expand=False))
+        console.print(
+            f"{constants.markers.Indent} {Panel(Markdown(current_report), title='Report', expand=False)} {constants.markers.Newline}"
+        )
         console.print()
 
 
